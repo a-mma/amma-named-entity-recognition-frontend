@@ -1,0 +1,68 @@
+<div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign.gt-md="space-around">
+  <div fxFlex="50" fxFlexOffset="5">
+    <form class="form">
+      <mat-form-field class="form-field">
+        <textarea #data id="text-area" name="mal-text" matInput placeholder="Please enter Malayalam Text here" matTextareaAutosize
+          matAutosizeMinRows="1" matAutosizeMaxRows="20" [(ngModel)]="value" (select)="getData(data)" (change)="resetValue(data)"></textarea>
+      </mat-form-field>
+      <div class="button-row" *ngIf="value">
+        <button mat-raised-button color="warn" (click)="clearValue()">Clear</button>
+      </div>
+    </form>
+  </div>
+  <div fxFlex="50" fxFlexOffset="5">
+    <form class="form" novalidate [formGroup]="trainingDataForm" (ngSubmit)="addData()">
+      <mat-form-field class="form-field">
+        <textarea readonly id="text-area" formControlName="selectedText" name="text-area" matInput placeholder="Selected text" matTextareaAutosize
+          matAutosizeMinRows="1" matAutosizeMaxRows="20" [(ngModel)]="selectedText"></textarea>
+        <mat-hint>
+          <span [hidden]="!(formErrors.selectedText)">
+            {{formErrors.selectedText}}</span>
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field style="width:29.3%;padding-right:3%;">
+        <mat-select [(value)]="selected" placeholder="Category" formControlName="entity">
+          <mat-option value="Person">Person</mat-option>
+          <mat-option value="Location">Location</mat-option>
+          <mat-option value="Organization">Organization</mat-option>
+          <mat-option value="Time">Time</mat-option>
+          <mat-option value="Date">Date</mat-option>
+          <mat-option value="Money">Money</mat-option>
+          <mat-option value="Percent">Percent</mat-option>
+        </mat-select>
+        <mat-hint>
+          <span [hidden]="!(formErrors.entity)">
+            {{formErrors.entity}}</span>
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field class="example-full-width" style="width:62%;">
+        <input matInput placeholder="Entity Value" value="" formControlName="value">
+        <mat-hint>
+          <span [hidden]="!(formErrors.value)">
+            {{formErrors.value}}</span>
+        </mat-hint>
+      </mat-form-field>
+      <div class="button-row">
+        <button type="submit" mat-raised-button color="primary" [disabled]="trainingDataForm.invalid">Add</button>
+        <button type="button" mat-raised-button color="warn" (click)="resetForm()">Clear</button>
+      </div>
+    </form>
+    <div class="table-container">
+      <p></p>
+      <mat-table #table [dataSource]="dataSource" matSort *ngIf="entities&&entities?.length>0">
+        <ng-container matColumnDef="value">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Value </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="entity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Entity </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.entity}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+    <p></p>
+    <button type="button" mat-raised-button color="accent" *ngIf="entities&&entities?.length>0" (click)="confirmSubmit()">Submit</button>
+  </div>
+</div>

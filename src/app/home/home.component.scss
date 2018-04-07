@@ -1,0 +1,23 @@
+.form-field {
+  width: 95%;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  min-width: auto;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-header-cell {
+  color: rgb(68, 138, 255);
+  font-size: 1em;
+}
