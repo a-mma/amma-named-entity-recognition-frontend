@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign.gt-md="space-around">
+<div class="landing-background" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign.gt-md="space-around">
   <div fxFlex="50" fxFlexOffset="5">
     <form class="form">
       <mat-form-field class="form-field">
@@ -21,7 +21,7 @@
         </mat-hint>
       </mat-form-field>
       <mat-form-field style="width:29.3%;padding-right:3%;">
-        <mat-select [(value)]="selected" placeholder="Category" formControlName="entity">
+        <mat-select [(value)]="selected" placeholder="Entity" formControlName="entity">
           <mat-option value="Person">Person</mat-option>
           <mat-option value="Location">Location</mat-option>
           <mat-option value="Organization">Organization</mat-option>
@@ -49,20 +49,47 @@
     </form>
     <div class="table-container">
       <p></p>
-      <mat-table #table [dataSource]="dataSource" matSort *ngIf="entities&&entities?.length>0">
+      <mat-table #table [dataSource]="dataSource" matSort *ngIf="entityDataTable&&entityDataTable?.length>0">
+        <!-- <ng-container matColumnDef="no">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> No </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.position+1}}
+          </mat-cell>
+
+        </ng-container> -->
         <ng-container matColumnDef="value">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Value </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
+          <mat-cell *matCellDef="let element">{{element.value}}
+          </mat-cell>
+
         </ng-container>
         <ng-container matColumnDef="entity">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Entity </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.entity}} </mat-cell>
+          <mat-cell *matCellDef="let element">{{element.entity}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="selectedText">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Text</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.selectedText}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="start">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Start </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.start}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="end">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> End </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.end}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="no">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-icon (click)="removeElement(element.position)">delete</mat-icon>
+          </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
     </div>
     <p></p>
-    <button type="button" mat-raised-button color="accent" *ngIf="entities&&entities?.length>0" (click)="confirmSubmit()">Submit</button>
+    <button type="button" mat-raised-button color="accent" *ngIf="entityDataTable&&entityDataTable?.length>0" (click)="confirmSubmit()">Submit</button>
   </div>
 </div>

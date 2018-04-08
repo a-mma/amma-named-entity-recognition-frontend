@@ -1,8 +1,40 @@
+
 .sticky {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.header-bg {
+  background: linear-gradient(to right, #33ccff 0%, #ff99cc 100%);
+}
+
+h1 {
+  font-size: 2.3em;
+}
+
+.threed {
+  font-family: "Dancing Script";
+  text-align: center;
+  font-weight: 800;
+  color: white;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+  text-shadow: -10px 0 rgba(0, 255, 255, 0.4), 10px 0 rgba(255, 0, 255, 0.4);
+}
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 1em;
   }
-  
+  .mat-form-field {
+    font-size: 0.8em !important;
+  }
+}
+
+.logo{
+  height: auto;
+  width: 57px;
+  float: right;
+}
