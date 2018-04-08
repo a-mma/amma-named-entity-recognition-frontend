@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TrainingData } from '../shared/models/training-data.model';
 import { Entity } from '../shared/models/entity.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TrainingDataService } from '../shared/services/training-data.service';
+import { TrainingDataService } from '../services/training-data.service';
 import { MatTableDataSource, MatSort, MatTableModule } from '@angular/material';
 declare var swal: any;
 @Component({
