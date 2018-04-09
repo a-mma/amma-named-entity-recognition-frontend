@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
+// const favicon = require('serve-favicon');
 const app = express();
 const compression = require('compression');
 
@@ -16,11 +16,11 @@ const forceSSL = function () {
   }
 };
 
-app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')));
 app.use(compression());
 app.use(express.static(__dirname + '/dist'));
 // Start the app by listening on the default
 // Heroku port
-app.listen(process.env.PORT || 4200, function () {
+app.listen(process.env.PORT || 8080, function () {
   console.log('Listening on port ' + this.address().port); //Listening on port 8888
 });
