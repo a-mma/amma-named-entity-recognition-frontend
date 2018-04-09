@@ -16,7 +16,7 @@ const forceSSL = function () {
   }
 };
 
-app.use(favicon(path.join(__dirname, 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(compression());
 app.use(express.static(__dirname + '/dist'));
 // Start the app by listening on the default
