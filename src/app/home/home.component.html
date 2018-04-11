@@ -9,6 +9,16 @@
         <button mat-raised-button color="warn" (click)="clearValue()">Clear</button>
       </div>
     </form>
+    <h4>Here are some tools for Malayalam typing</h4>
+    <mat-list>
+      <mat-list-item>
+        <a href="https://www.google.com/intl/ml/inputtools/try/" target="_blank">Google Input Tools</a>
+      </mat-list-item>
+      <mat-list-item>
+        <a href="http://indiaz.com/mymalayalam" target="_blank">Indiaz Malayalam</a>
+      </mat-list-item>
+
+    </mat-list>
   </div>
   <div fxFlex="50" fxFlexOffset="5">
     <form class="form" novalidate [formGroup]="trainingDataForm" (ngSubmit)="addData()">
