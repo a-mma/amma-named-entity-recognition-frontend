@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
       'required': 'Entity value is required.',
       'minlength': 'Entity value must be at least 2 characters long.'
     },
-  }
+  };
 
   constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService) { this.createForm(); }
 
@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
 
   addData() {
     if (this.trainingDataForm.valid) {
-      let entity = new Entity();
+      const entity = new Entity();
       entity.start = this.selectionStart;
       entity.end = this.selectionEnd;
       entity.value = this.trainingDataForm.value.value;
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit {
   confirmSubmit() {
     swal({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'You won\'t be able to revert this!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -136,7 +136,7 @@ export class HomeComponent implements OnInit {
       if (result.value) {
         this.submitData();
       }
-    })
+    });
   }
   submitData() {
     this.trainingData.text = this.value;
