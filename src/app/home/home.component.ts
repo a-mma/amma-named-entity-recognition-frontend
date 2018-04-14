@@ -66,15 +66,17 @@ export class HomeComponent implements OnInit {
   onValueChanged(data?: any) {
     if (!this.trainingDataForm) { return; }
     const form = this.trainingDataForm;
-    for (const field in this.formErrors) {
+
+    for (const field of Object.keys(this.formErrors)) {
       this.formErrors[field] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
-        for (const key in control.errors) {
+        for (const key of Object.keys(control.errors)) {
           this.formErrors[field] += messages[key] + ' ';
         }
       }
+
     }
   }
 
