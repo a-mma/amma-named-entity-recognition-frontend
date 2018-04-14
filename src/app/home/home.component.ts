@@ -90,6 +90,7 @@ export class HomeComponent implements OnInit {
   addData() {
     if (this.trainingDataForm.valid) {
       const entity = new Entity();
+      let entityDataTableEntry: any = {};
       entity.start = this.selectionStart;
       entity.end = this.selectionEnd;
       entity.value = this.trainingDataForm.value.value;
@@ -97,9 +98,7 @@ export class HomeComponent implements OnInit {
       this.entities.push(entity);
       entityDataTableEntry.selectedText = this.selectedText;
       entityDataTableEntry.position = this.entityDataTable.length;
-      console.log('ere', entityDataTableEntry);
       this.entityDataTable.push(entityDataTableEntry);
-      console.log('et', this.entities, this.entityDataTable);
       this.dataSource = new MatTableDataSource(this.entityDataTable);
       this.dataSource.sort = this.sort;
       this.resetForm();
