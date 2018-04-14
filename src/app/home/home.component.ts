@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
       'required': 'Entity value is required.',
       'minlength': 'Entity value must be at least 2 characters long.'
     },
-  }
+  };
 
   constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService) { this.createForm(); }
 
@@ -67,12 +67,12 @@ export class HomeComponent implements OnInit {
   onValueChanged(data?: any) {
     if (!this.trainingDataForm) { return; }
     const form = this.trainingDataForm;
-    for (const field in this.formErrors) {
+    for (const field of Object.keys(this.formErrors)) {
       this.formErrors[field] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
-        for (const key in control.errors) {
+        for (const key of Object.keys(control.errors)) {
           this.formErrors[field] += messages[key] + ' ';
         }
       }
@@ -87,8 +87,8 @@ export class HomeComponent implements OnInit {
 
   addData() {
     if (this.trainingDataForm.valid) {
-      let entity = new Entity();
-      let entityDataTableEntry: any = {};
+      const entity = new Entity();
+      const entityDataTableEntry: any = {};
       entity.start = entityDataTableEntry.start = this.selectionStart;
       entity.end = entityDataTableEntry.end = this.selectionEnd;
       entity.value = entityDataTableEntry.value = this.trainingDataForm.value.value;
@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit {
   confirmSubmit() {
     swal({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'You won\'t be able to revert this!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
       if (result.value) {
         this.submitData();
       }
-    })
+    });
   }
   submitData() {
     this.trainingData.text = this.value;
