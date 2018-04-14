@@ -14,7 +14,7 @@ import {
   MatProgressBarModule, MatSliderModule, MatSlideToggleModule,
   MatMenuModule, MatDialogModule, MatSnackBarModule, MatSelectModule,
   MatInputModule, MatSidenavModule, MatCardModule, MatIconModule,
-  MatRadioModule, MatProgressSpinnerModule, MatTabsModule, MatListModule,MatTableModule
+  MatRadioModule, MatProgressSpinnerModule, MatTabsModule, MatListModule, MatTableModule
 } from '@angular/material';
 
 import { HeaderComponent } from './header/header.component';
