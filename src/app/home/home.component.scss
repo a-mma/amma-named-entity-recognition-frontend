@@ -21,3 +21,20 @@
   color: rgb(68, 138, 255);
   font-size: 1em;
 }
+
+mat-icon {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .mat-table {
+    font-size: .8em;
+  }
+  .mat-cell {
+    font-size: 0.7em;
+  }
+
+  form{
+    margin-left: 5%;
+  }
+}

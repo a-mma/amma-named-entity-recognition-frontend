@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TrainingData } from '../shared/models/training-data.model';
 import { Entity } from '../shared/models/entity.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TrainingDataService } from '../shared/services/training-data.service';
+import { TrainingDataService } from '../services/training-data.service';
 import { MatTableDataSource, MatSort, MatTableModule } from '@angular/material';
 declare var swal: any;
 @Component({
@@ -19,8 +19,9 @@ export class HomeComponent implements OnInit {
   trainingData = new TrainingData();
   trainingDataForm: FormGroup;
   entities: Entity[];
-  displayedColumns = ['value', 'entity'];
-  dataSource = new MatTableDataSource(this.entities);
+  displayedColumns = ['value', 'entity', 'selectedText', 'start', 'end', 'no'];
+  entityDataTable = [];
+  dataSource = new MatTableDataSource(this.entityDataTable);
 
   @ViewChild(MatSort) sort: MatSort;
   formErrors = {
@@ -87,13 +88,18 @@ export class HomeComponent implements OnInit {
   addData() {
     if (this.trainingDataForm.valid) {
       let entity = new Entity();
-      entity.start = this.selectionStart;
-      entity.end = this.selectionEnd;
-      entity.value = this.trainingDataForm.value.value;
-      entity.entity = this.trainingDataForm.value.entity;
+      let entityDataTableEntry: any = {};
+      entity.start = entityDataTableEntry.start = this.selectionStart;
+      entity.end = entityDataTableEntry.end = this.selectionEnd;
+      entity.value = entityDataTableEntry.value = this.trainingDataForm.value.value;
+      entity.entity = entityDataTableEntry.entity = this.trainingDataForm.value.entity;
       this.entities.push(entity);
-      console.log('et', this.entities);
-      this.dataSource = new MatTableDataSource(this.entities);
+      entityDataTableEntry.selectedText = this.selectedText;
+      entityDataTableEntry.position = this.entityDataTable.length;
+      console.log('ere', entityDataTableEntry);
+      this.entityDataTable.push(entityDataTableEntry);
+      console.log('et', this.entities, this.entityDataTable);
+      this.dataSource = new MatTableDataSource(this.entityDataTable);
       this.dataSource.sort = this.sort;
       this.resetForm();
     }
@@ -113,6 +119,7 @@ export class HomeComponent implements OnInit {
   dumpData() {
     this.resetForm();
     this.entities = [];
+    this.entityDataTable = [];
     this.trainingData = new TrainingData();
   }
   resetForm() {
@@ -142,26 +149,33 @@ export class HomeComponent implements OnInit {
     this.trainingData.text = this.value;
     this.trainingData.entities = this.entities;
     if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '') {
-      swal('Great', 'Your valuable contribution is added', 'success');
       console.log('data', this.trainingData);
       this.trainingDataService.submitTrainingData(this.trainingData).subscribe(
         response => {
-          console.log('response', response);
           this.clearValue();
+          swal('Great', 'Your valuable contribution is added', 'success');
         },
         error => {
-
+          swal('Oops!', 'Something went wrong', 'error');
         }
       );
     }
   }
+
+  removeElement(index: number) {
+    this.entityDataTable.splice(index, 1);
+    this.entities.splice(index, 1);
+  }
 }
 
-export interface Entity {
+
+export interface EntityDataTable {
   start: number;
   end: number;
   value: string;
   entity: string;
+  selectedText: string;
+  position: number;
 }
 
 
