@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TrainingData } from '../shared/models/training-data.model';
 import { Entity } from '../shared/models/entity.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TrainingDataService } from '../services/training-data.service';
 import { MatTableDataSource, MatSort, MatTableModule } from '@angular/material';
 declare var swal: any;
+declare var $: any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   displayedColumns = ['value', 'entity', 'selectedText', 'start', 'end', 'no'];
   entityDataTable = [];
   dataSource = new MatTableDataSource(this.entityDataTable);
-
+  myRecaptcha = new FormControl(false);
+  highlightIndexes = [];
   @ViewChild(MatSort) sort: MatSort;
   formErrors = {
     'selectedText': '',
@@ -42,12 +44,11 @@ export class HomeComponent implements OnInit {
       'required': 'Entity value is required.',
       'minlength': 'Entity value must be at least 2 characters long.'
     },
-  }
+  };
 
   constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService) { this.createForm(); }
 
   ngOnInit() {
-
   }
   createForm() {
     this.trainingDataForm = this.formBuilder.group(
@@ -101,6 +102,7 @@ export class HomeComponent implements OnInit {
       console.log('et', this.entities, this.entityDataTable);
       this.dataSource = new MatTableDataSource(this.entityDataTable);
       this.dataSource.sort = this.sort;
+      this.setHighlight();
       this.resetForm();
     }
   }
@@ -121,6 +123,8 @@ export class HomeComponent implements OnInit {
     this.entities = [];
     this.entityDataTable = [];
     this.trainingData = new TrainingData();
+    this.highlightIndexes = [];
+    this.setHighlight();
   }
   resetForm() {
     this.trainingDataForm.reset({
@@ -143,12 +147,12 @@ export class HomeComponent implements OnInit {
       if (result.value) {
         this.submitData();
       }
-    })
+    });
   }
   submitData() {
     this.trainingData.text = this.value;
     this.trainingData.entities = this.entities;
-    if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '') {
+    if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '' && this.myRecaptcha.value === true) {
       console.log('data', this.trainingData);
       this.trainingDataService.submitTrainingData(this.trainingData).subscribe(
         response => {
@@ -171,6 +175,30 @@ export class HomeComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.entityDataTable);
     this.dataSource.sort = this.sort;
   }
+
+  onScriptLoad() {
+    console.log('Google reCAPTCHA loaded and is ready for use!')
+  }
+
+  onScriptError() {
+    console.log('Something went long when loading the Google reCAPTCHA')
+  }
+
+  setHighlight() {
+    this.entityDataTable.forEach((element) => {
+      let val = [];
+      val.push(element.start);
+      val.push(element.end);
+      this.highlightIndexes.push(val);
+      val = [];
+    });
+    $('.highlight-text').highlightWithinTextarea({
+      highlight: this.highlightIndexes
+    });
+  }
+
+
+
 }
 
 
