@@ -87,8 +87,8 @@ export class HomeComponent implements OnInit {
 
   addData() {
     if (this.trainingDataForm.valid) {
-      let entity = new Entity();
-      let entityDataTableEntry: any = {};
+      const entity = new Entity();
+      const entityDataTableEntry: any = {};
       entity.start = entityDataTableEntry.start = this.selectionStart;
       entity.end = entityDataTableEntry.end = this.selectionEnd;
       entity.value = entityDataTableEntry.value = this.trainingDataForm.value.value;
@@ -165,6 +165,11 @@ export class HomeComponent implements OnInit {
   removeElement(index: number) {
     this.entityDataTable.splice(index, 1);
     this.entities.splice(index, 1);
+    this.entityDataTable.forEach((element, arrayIndex) => {
+      element.position = arrayIndex;
+    });
+    this.dataSource = new MatTableDataSource(this.entityDataTable);
+    this.dataSource.sort = this.sort;
   }
 }
 
