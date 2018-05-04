@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TrainingDataService } from './services/training-data.service';
-
+import { RecaptchaModule } from 'angular-google-recaptcha';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +42,10 @@ import { TrainingDataService } from './services/training-data.service';
     MatRadioModule, MatProgressSpinnerModule, MatTabsModule, MatListModule, MatTableModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RecaptchaModule.forRoot({
+      siteKey: '6LeOPlcUAAAAAMqAJTxfqGMrkeH0SH60c5TXrWg7',
+  })
   ],
   providers: [TrainingDataService],
   bootstrap: [AppComponent]
