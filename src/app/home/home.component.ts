@@ -4,6 +4,9 @@ import { Entity } from '../shared/models/entity.model';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TrainingDataService } from '../services/training-data.service';
 import { MatTableDataSource, MatSort, MatTableModule } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { RegistrationComponent } from '../registration/registration.component';
+import { UserRegistrationService } from '../services/user-registration.service';
 declare var swal: any;
 declare var $: any;
 @Component({
@@ -25,6 +28,8 @@ export class HomeComponent implements OnInit {
   dataSource = new MatTableDataSource(this.entityDataTable);
   myRecaptcha = new FormControl(false);
   highlightIndexes = [];
+  currentUsername = '';
+  usernameSet = false;
   @ViewChild(MatSort) sort: MatSort;
   formErrors = {
     'selectedText': '',
@@ -46,7 +51,8 @@ export class HomeComponent implements OnInit {
     },
   };
 
-  constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService) { this.createForm(); }
+  constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService, public dialog: MatDialog,
+    private userRegistrationService: UserRegistrationService) { this.createForm(); }
 
   ngOnInit() {
   }
@@ -149,7 +155,9 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  
   submitData() {
+    this.trainingData.uname = this.currentUsername === '' ? 'anonymous' : this.currentUsername;
     this.trainingData.text = this.value;
     this.trainingData.entities = this.entities;
     if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '' && this.myRecaptcha.value === true) {
@@ -197,8 +205,35 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  openDialog(): void {
+    let dialogRef = this.dialog.open(RegistrationComponent, {
+      width: '50%',
+      height: '40%'
+    });
+  }
 
+  setUsername() {
+    if (this.currentUsername !== '' && !this.usernameSet) {
+      this.userRegistrationService.isUsernameAvailable(this.currentUsername).subscribe((response: any) => {
+        this.currentUsername = response.exists ? this.currentUsername : '';
+        if (!response.exists) {
+          swal('Hmmm', 'Username not found. Please join.', 'warning');
+        }
+        else {
+          swal('Great', 'Please proceed to tagging.', 'success');
+          this.usernameSet = true;
+        }
+      },
+        error => {
 
+        });
+    }
+  }
+
+  clearUsername() {
+    this.currentUsername = '';
+    this.usernameSet = false;
+  }
 }
 
 

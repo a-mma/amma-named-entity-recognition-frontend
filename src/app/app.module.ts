@@ -22,12 +22,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TrainingDataService } from './services/training-data.service';
 import { RecaptchaModule } from 'angular-google-recaptcha';
+import { RegistrationComponent } from './registration/registration.component';
+import { UserRegistrationService } from './services/user-registration.service';
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent
+    HomeComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
@@ -45,9 +48,10 @@ import { RecaptchaModule } from 'angular-google-recaptcha';
     HttpClientModule,
     RecaptchaModule.forRoot({
       siteKey: '6LeOPlcUAAAAAMqAJTxfqGMrkeH0SH60c5TXrWg7',
-  })
+    })
   ],
-  providers: [TrainingDataService],
-  bootstrap: [AppComponent]
+  providers: [TrainingDataService, UserRegistrationService],
+  bootstrap: [AppComponent],
+  entryComponents: [RegistrationComponent]
 })
 export class AppModule { }

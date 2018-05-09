@@ -2,8 +2,8 @@
   <div fxFlex="50" fxFlexOffset="5">
     <form class="form">
       <mat-form-field class="form-field">
-        <textarea #data id="text-area" class="highlight-text" name="mal-text" matInput placeholder="Please enter Malayalam Text here" matTextareaAutosize
-          matAutosizeMinRows="1" matAutosizeMaxRows="20" [(ngModel)]="value" (select)="getData(data)" (change)="resetValue(data)"></textarea>
+        <textarea #data id="text-area" class="highlight-text" name="mal-text" matInput placeholder="Please enter Malayalam Text here"
+          matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="20" [(ngModel)]="value" (select)="getData(data)" (change)="resetValue(data)"></textarea>
       </mat-form-field>
       <div class="button-row" *ngIf="value">
         <button mat-raised-button color="warn" (click)="clearValue()">Clear</button>
@@ -22,6 +22,12 @@
   </div>
   <div fxFlex="50" fxFlexOffset="5">
     <form class="form" novalidate [formGroup]="trainingDataForm" (ngSubmit)="addData()">
+      <mat-form-field class="form-field">
+        <input matInput [readonly]="usernameSet" type="text" [ngModelOptions]="{standalone: true}" placeholder="Username" [(ngModel)]="currentUsername">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="setUsername()">Set</button>
+      <button mat-raised-button color="accent" (click)="openDialog()">Join Us</button>
+      <button mat-raised-button color="warn" (click)="clearUsername()" *ngIf="usernameSet">Clear</button>
       <mat-form-field class="form-field">
         <textarea readonly id="text-area" formControlName="selectedText" name="text-area" matInput placeholder="Selected text" matTextareaAutosize
           matAutosizeMinRows="1" matAutosizeMaxRows="20" [(ngModel)]="selectedText"></textarea>
