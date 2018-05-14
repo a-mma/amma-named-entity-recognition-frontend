@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   highlightIndexes = [];
   currentUsername = '';
   usernameSet = false;
+  yPos = 0;
   @ViewChild(MatSort) sort: MatSort;
   formErrors = {
     'selectedText': '',
@@ -55,6 +56,9 @@ export class HomeComponent implements OnInit {
     private userRegistrationService: UserRegistrationService) { this.createForm(); }
 
   ngOnInit() {
+    document.getElementById('text-area').addEventListener('scroll', (event: any) => {
+      this.yPos = event.target.scrollTop;
+    });
   }
   createForm() {
     this.trainingDataForm = this.formBuilder.group(
@@ -103,13 +107,14 @@ export class HomeComponent implements OnInit {
       this.entities.push(entity);
       entityDataTableEntry.selectedText = this.selectedText;
       entityDataTableEntry.position = this.entityDataTable.length;
-      console.log('ere', entityDataTableEntry);
+
       this.entityDataTable.push(entityDataTableEntry);
-      console.log('et', this.entities, this.entityDataTable);
+
       this.dataSource = new MatTableDataSource(this.entityDataTable);
       this.dataSource.sort = this.sort;
       this.setHighlight();
       this.resetForm();
+      document.getElementById('text-area').scroll(0, this.yPos);
     }
   }
 
@@ -140,6 +145,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  watch(evt: any) {
+
+  }
+
   confirmSubmit() {
     swal({
       title: 'Are you sure?',
@@ -155,13 +164,13 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  
+
   submitData() {
     this.trainingData.uname = this.currentUsername === '' ? 'anonymous' : this.currentUsername;
     this.trainingData.text = this.value;
     this.trainingData.entities = this.entities;
     if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '' && this.myRecaptcha.value === true) {
-      console.log('data', this.trainingData);
+
       this.trainingDataService.submitTrainingData(this.trainingData).subscribe(
         response => {
           this.clearValue();
@@ -185,11 +194,11 @@ export class HomeComponent implements OnInit {
   }
 
   onScriptLoad() {
-    console.log('Google reCAPTCHA loaded and is ready for use!')
+
   }
 
   onScriptError() {
-    console.log('Something went long when loading the Google reCAPTCHA')
+
   }
 
   setHighlight() {
@@ -245,5 +254,3 @@ export interface EntityDataTable {
   selectedText: string;
   position: number;
 }
-
-
