@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Set Username</h2>
+<form class="form" novalidate [formGroup]="registrationForm" (ngSubmit)="addUser()">
+  <mat-dialog-content>
+    <mat-form-field class="form-field">
+      <input type="text" matInput placeholder="Username" formControlName="username" (keyup)="checkUsernameAvailability()">
+      <mat-hint>
+        <span class="unavailable" *ngIf="!available&&registrationForm.valid">
+          Username not available</span>
+        <span class="available" *ngIf="available&&registrationForm.valid">
+          Username available</span>
+        <span class="unavailable" *ngIf="registrationForm.get('username').hasError('required')&&registrationForm.get('username').touched">
+          Required</span>
+        <span class="unavailable" *ngIf="registrationForm.get('username').hasError('minlength')">
+          Required min length is 6</span>
+        <span class="unavailable" *ngIf="registrationForm.get('username').hasError('maxlength')">
+          Maximum allowed length is 30</span>
+      </mat-hint>
+    </mat-form-field>
+    <span *ngIf="showHash">Your Hash Value:
+      <strong>{{hashValue}}</strong>
+    </span>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button type="submit" mat-raised-button color="accent">Submit</button>
+    <button type="button" mat-raised-button color="warn" (click)="onNoClick()">Close</button>
+  </mat-dialog-actions>
+</form>

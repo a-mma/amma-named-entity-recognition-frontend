@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TrainingData } from '../shared/models/training-data.model';
 import { Entity } from '../shared/models/entity.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TrainingDataService } from '../services/training-data.service';
 import { MatTableDataSource, MatSort, MatTableModule } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { RegistrationComponent } from '../registration/registration.component';
+import { UserRegistrationService } from '../services/user-registration.service';
 declare var swal: any;
+declare var $: any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -22,7 +26,11 @@ export class HomeComponent implements OnInit {
   displayedColumns = ['value', 'entity', 'selectedText', 'start', 'end', 'no'];
   entityDataTable = [];
   dataSource = new MatTableDataSource(this.entityDataTable);
-
+  myRecaptcha = new FormControl(false);
+  highlightIndexes = [];
+  currentUsername = '';
+  usernameSet = false;
+  yPos = 0;
   @ViewChild(MatSort) sort: MatSort;
   formErrors = {
     'selectedText': '',
@@ -44,10 +52,13 @@ export class HomeComponent implements OnInit {
     },
   };
 
-  constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService) { this.createForm(); }
+  constructor(private formBuilder: FormBuilder, private trainingDataService: TrainingDataService, public dialog: MatDialog,
+    private userRegistrationService: UserRegistrationService) { this.createForm(); }
 
   ngOnInit() {
-
+    document.getElementById('text-area').addEventListener('scroll', (event: any) => {
+      this.yPos = event.target.scrollTop;
+    });
   }
   createForm() {
     this.trainingDataForm = this.formBuilder.group(
@@ -90,18 +101,22 @@ export class HomeComponent implements OnInit {
   addData() {
     if (this.trainingDataForm.valid) {
       const entity = new Entity();
-      let entityDataTableEntry: any = {};
-      entity.start = this.selectionStart;
-      entity.end = this.selectionEnd;
-      entity.value = this.trainingDataForm.value.value;
-      entity.entity = this.trainingDataForm.value.entity;
+      const entityDataTableEntry: any = {};
+      entity.start = entityDataTableEntry.start = this.selectionStart;
+      entity.end = entityDataTableEntry.end = this.selectionEnd;
+      entity.value = entityDataTableEntry.value = this.trainingDataForm.value.value;
+      entity.entity = entityDataTableEntry.entity = this.trainingDataForm.value.entity;
       this.entities.push(entity);
       entityDataTableEntry.selectedText = this.selectedText;
       entityDataTableEntry.position = this.entityDataTable.length;
+
       this.entityDataTable.push(entityDataTableEntry);
+
       this.dataSource = new MatTableDataSource(this.entityDataTable);
       this.dataSource.sort = this.sort;
+      this.setHighlight();
       this.resetForm();
+      document.getElementById('text-area').scroll(0, this.yPos);
     }
   }
 
@@ -121,6 +136,8 @@ export class HomeComponent implements OnInit {
     this.entities = [];
     this.entityDataTable = [];
     this.trainingData = new TrainingData();
+    this.highlightIndexes = [];
+    this.setHighlight();
   }
   resetForm() {
     this.trainingDataForm.reset({
@@ -128,6 +145,10 @@ export class HomeComponent implements OnInit {
       entity: 'Person',
       value: ''
     });
+  }
+
+  watch(evt: any) {
+
   }
 
   confirmSubmit() {
@@ -145,11 +166,13 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
   submitData() {
+    this.trainingData.uname = this.currentUsername === '' ? 'anonymous' : this.currentUsername;
     this.trainingData.text = this.value;
     this.trainingData.entities = this.entities;
-    if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '') {
-      console.log('data', this.trainingData);
+    if (this.trainingData.entities.length !== 0 && this.trainingData.text !== '' && this.myRecaptcha.value === true) {
+
       this.trainingDataService.submitTrainingData(this.trainingData).subscribe(
         response => {
           this.clearValue();
@@ -165,6 +188,62 @@ export class HomeComponent implements OnInit {
   removeElement(index: number) {
     this.entityDataTable.splice(index, 1);
     this.entities.splice(index, 1);
+    this.entityDataTable.forEach((element, arrayIndex) => {
+      element.position = arrayIndex;
+    });
+    this.dataSource = new MatTableDataSource(this.entityDataTable);
+    this.dataSource.sort = this.sort;
+  }
+
+  onScriptLoad() {
+
+  }
+
+  onScriptError() {
+
+  }
+
+  setHighlight() {
+    this.entityDataTable.forEach((element) => {
+      let val = [];
+      val.push(element.start);
+      val.push(element.end);
+      this.highlightIndexes.push(val);
+      val = [];
+    });
+    $('.highlight-text').highlightWithinTextarea({
+      highlight: this.highlightIndexes
+    });
+  }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(RegistrationComponent, {
+      width: '50%',
+      height: '40%'
+    });
+  }
+
+  setUsername() {
+    if (this.currentUsername !== '' && !this.usernameSet) {
+      this.userRegistrationService.isUsernameAvailable(this.currentUsername).subscribe((response: any) => {
+        this.currentUsername = response.exists ? this.currentUsername : '';
+        if (!response.exists) {
+          swal('Hmmm', 'Username not found. Please join.', 'warning');
+        }
+        else {
+          swal('Great', 'Please proceed to tagging.', 'success');
+          this.usernameSet = true;
+        }
+      },
+        error => {
+
+        });
+    }
+  }
+
+  clearUsername() {
+    this.currentUsername = '';
+    this.usernameSet = false;
   }
 }
 
@@ -177,5 +256,3 @@ export interface EntityDataTable {
   selectedText: string;
   position: number;
 }
-
-
